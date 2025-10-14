@@ -1,0 +1,35 @@
+# GCP Configuration
+gcp:
+  # Project ID (can be overridden via environment variable)
+  project_id: null
+
+  # Services to scan
+  services:
+    - iam
+    - storage
+    - compute
+    - vpc
+    - logging
+    - kms
+
+  # IAM checks
+  iam:
+    service_account_key_rotation: 90
+    primitive_roles_check: true  # Avoid Owner, Editor, Viewer
+
+  # Storage bucket checks
+  storage:
+    uniform_bucket_level_access: true
+    public_access_prevention: true
+    encryption_required: true
+
+  # Compute instance checks
+  compute:
+    os_login_enabled: true
+    serial_port_disabled: true
+    ip_forwarding_disabled: true
+
+  # Compliance frameworks
+  compliance:
+    - cis_gcp_foundations_v1.3
+    - asd_essential_eight

@@ -1,0 +1,37 @@
+# Azure Configuration
+azure:
+  # Subscription ID (can be overridden via environment variable)
+  subscription_id: null
+
+  # Services to scan
+  services:
+    - identity
+    - storage
+    - compute
+    - network
+    - security_center
+    - key_vault
+
+  # Identity and Access checks
+  identity:
+    mfa_required: true
+    privileged_role_review: true
+    guest_user_review: true
+
+  # Storage account checks
+  storage:
+    encryption_required: true
+    secure_transfer_required: true
+    public_access_blocked: true
+    blob_soft_delete: true
+
+  # Network security
+  network:
+    nsg_logging_enabled: true
+    block_rdp_from_internet: true
+    block_ssh_from_internet: true
+
+  # Compliance frameworks
+  compliance:
+    - cis_azure_foundations_v1.5
+    - asd_essential_eight

@@ -1,0 +1,73 @@
+# AWS Configuration
+aws:
+  # Default region for scanning
+  region: ap-southeast-2
+
+  # Additional regions to scan (optional)
+  additional_regions:
+    - us-east-1
+    - eu-west-1
+
+  # Services to scan
+  services:
+    - iam
+    - s3
+    - ec2
+    - vpc
+    - cloudtrail
+    - cloudwatch
+    - kms
+    - lambda
+    - rds
+
+  # IAM checks configuration
+  iam:
+    mfa_required: true
+    password_policy:
+      minimum_length: 14
+      require_symbols: true
+      require_numbers: true
+      require_uppercase: true
+      require_lowercase: true
+      max_age_days: 90
+    access_key_rotation_days: 90
+    inactive_user_days: 90
+
+  # S3 checks configuration
+  s3:
+    encryption_required: true
+    versioning_required: true
+    logging_required: true
+    public_access_blocked: true
+
+  # Security group checks
+  security_groups:
+    block_ssh_from_internet: true  # Block 0.0.0.0/0 on port 22
+    block_rdp_from_internet: true  # Block 0.0.0.0/0 on port 3389
+    block_databases_from_internet: true
+    sensitive_ports:
+      - 22    # SSH
+      - 3389  # RDP
+      - 3306  # MySQL
+      - 5432  # PostgreSQL
+      - 1433  # SQL Server
+      - 27017 # MongoDB
+      - 6379  # Redis
+
+  # EC2 checks
+  ec2:
+    require_encrypted_ebs: true
+    require_imdsv2: true
+    check_public_ips: true
+
+  # CloudTrail checks
+  cloudtrail:
+    required: true
+    multi_region: true
+    log_file_validation: true
+    s3_logging: true
+
+  # Compliance frameworks to check against
+  compliance:
+    - cis_aws_foundations_v1.4
+    - asd_essential_eight
