@@ -26,7 +26,7 @@ Try the toolkit without AWS credentials:
 
 ```bash
 # Clone the repository
-git clone https://github.com/raoufchak/cloud-security-toolkit.git
+git clone https://github.com/Raoof128/cloud-security-toolkit.git
 cd cloud-security-toolkit
 
 # Install basic dependencies (no AWS SDK required for demo)
