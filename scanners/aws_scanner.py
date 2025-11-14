@@ -2,6 +2,7 @@
 AWS Security Scanner
 Comprehensive security audit scanner for AWS environments
 """
+from typing import List, Dict, Any, Optional
 import boto3
 from datetime import datetime, timedelta, timezone
 from botocore.exceptions import ClientError, NoCredentialsError
@@ -11,15 +12,15 @@ import sys
 class AWSSecurityScanner:
     """Main AWS security scanner class"""
 
-    def __init__(self, region='ap-southeast-2'):
+    def __init__(self, region: str = 'ap-southeast-2') -> None:
         """
         Initialize AWS security scanner
 
         Args:
             region (str): AWS region to scan
         """
-        self.region = region
-        self.findings = []
+        self.region: str = region
+        self.findings: List[Dict[str, Any]] = []
 
         try:
             # Initialize AWS clients
@@ -40,7 +41,7 @@ class AWSSecurityScanner:
             print(f"[-] Error initializing AWS scanner: {str(e)}")
             sys.exit(1)
 
-    def scan_iam_users(self):
+    def scan_iam_users(self) -> List[Dict[str, Any]]:
         """
         Check IAM users for security issues
 
@@ -49,12 +50,19 @@ class AWSSecurityScanner:
         - Access keys older than 90 days
         - Unused users (no recent activity)
         - Users with administrator access
+
+        Returns:
+            List[Dict[str, Any]]: List of security findings
         """
-        findings = []
+        findings: List[Dict[str, Any]] = []
         print("  [*] Checking IAM users...")
 
         try:
-            users = self.iam_client.list_users()['Users']
+            # Use pagination to handle large numbers of users
+            users = []
+            paginator = self.iam_client.get_paginator('list_users')
+            for page in paginator.paginate():
+                users.extend(page['Users'])
 
             for user in users:
                 username = user['UserName']
@@ -167,9 +175,14 @@ class AWSSecurityScanner:
         print(f"  [+] Found {len(findings)} IAM-related issues")
         return findings
 
-    def scan_iam_password_policy(self):
-        """Check IAM password policy compliance"""
-        findings = []
+    def scan_iam_password_policy(self) -> List[Dict[str, Any]]:
+        """
+        Check IAM password policy compliance
+
+        Returns:
+            List[Dict[str, Any]]: List of security findings
+        """
+        findings: List[Dict[str, Any]] = []
         print("  [*] Checking IAM password policy...")
 
         try:
@@ -240,7 +253,7 @@ class AWSSecurityScanner:
 
         return findings
 
-    def scan_s3_buckets(self):
+    def scan_s3_buckets(self) -> List[Dict[str, Any]]:
         """
         Audit S3 bucket configurations
 
@@ -250,12 +263,17 @@ class AWSSecurityScanner:
         - Versioning
         - Logging
         - Secure transport
+
+        Returns:
+            List[Dict[str, Any]]: List of security findings
         """
-        findings = []
+        findings: List[Dict[str, Any]] = []
         print("  [*] Checking S3 buckets...")
 
         try:
-            buckets = self.s3_client.list_buckets()['Buckets']
+            # Note: S3 list_buckets doesn't support pagination as it returns all buckets
+            # However, we handle it properly in case of API changes
+            buckets = self.s3_client.list_buckets().get('Buckets', [])
             print(f"    [*] Found {len(buckets)} buckets to scan")
 
             for bucket in buckets:
@@ -372,19 +390,26 @@ class AWSSecurityScanner:
         print(f"  [+] Found {len(findings)} S3-related issues")
         return findings
 
-    def scan_security_groups(self):
+    def scan_security_groups(self) -> List[Dict[str, Any]]:
         """
         Check security group rules for open access
 
         Checks:
         - Unrestricted inbound rules (0.0.0.0/0)
         - Open sensitive ports (SSH, RDP, databases)
+
+        Returns:
+            List[Dict[str, Any]]: List of security findings
         """
-        findings = []
+        findings: List[Dict[str, Any]] = []
         print("  [*] Checking security groups...")
 
         try:
-            security_groups = self.ec2_client.describe_security_groups()['SecurityGroups']
+            # Use pagination to handle large numbers of security groups
+            security_groups = []
+            paginator = self.ec2_client.get_paginator('describe_security_groups')
+            for page in paginator.paginate():
+                security_groups.extend(page['SecurityGroups'])
             print(f"    [*] Found {len(security_groups)} security groups")
 
             # Define sensitive ports
@@ -459,7 +484,7 @@ class AWSSecurityScanner:
         print(f"  [+] Found {len(findings)} security group issues")
         return findings
 
-    def scan_ec2_instances(self):
+    def scan_ec2_instances(self) -> List[Dict[str, Any]]:
         """
         Check EC2 instances for security issues
 
@@ -467,16 +492,23 @@ class AWSSecurityScanner:
         - Unencrypted EBS volumes
         - Public IP addresses
         - IMDSv1 usage
+
+        Returns:
+            List[Dict[str, Any]]: List of security findings
         """
-        findings = []
+        findings: List[Dict[str, Any]] = []
         print("  [*] Checking EC2 instances...")
 
         try:
-            instances = self.ec2_client.describe_instances()
-            instance_count = sum(len(r['Instances']) for r in instances['Reservations'])
+            # Use pagination to handle large numbers of instances
+            reservations = []
+            paginator = self.ec2_client.get_paginator('describe_instances')
+            for page in paginator.paginate():
+                reservations.extend(page['Reservations'])
+            instance_count = sum(len(r['Instances']) for r in reservations)
             print(f"    [*] Found {instance_count} instances")
 
-            for reservation in instances['Reservations']:
+            for reservation in reservations:
                 for instance in reservation['Instances']:
                     instance_id = instance['InstanceId']
                     instance_state = instance['State']['Name']
@@ -536,7 +568,7 @@ class AWSSecurityScanner:
         print(f"  [+] Found {len(findings)} EC2-related issues")
         return findings
 
-    def scan_cloudtrail(self):
+    def scan_cloudtrail(self) -> List[Dict[str, Any]]:
         """
         Check CloudTrail logging configuration
 
@@ -545,8 +577,11 @@ class AWSSecurityScanner:
         - Multi-region trails
         - Log file validation
         - S3 bucket logging
+
+        Returns:
+            List[Dict[str, Any]]: List of security findings
         """
-        findings = []
+        findings: List[Dict[str, Any]] = []
         print("  [*] Checking CloudTrail configuration...")
 
         try:
@@ -617,13 +652,22 @@ class AWSSecurityScanner:
         print(f"  [+] Found {len(findings)} CloudTrail issues")
         return findings
 
-    def scan_vpc_flow_logs(self):
-        """Check VPC Flow Logs configuration"""
-        findings = []
+    def scan_vpc_flow_logs(self) -> List[Dict[str, Any]]:
+        """
+        Check VPC Flow Logs configuration
+
+        Returns:
+            List[Dict[str, Any]]: List of security findings
+        """
+        findings: List[Dict[str, Any]] = []
         print("  [*] Checking VPC Flow Logs...")
 
         try:
-            vpcs = self.ec2_client.describe_vpcs()['Vpcs']
+            # Use pagination to handle large numbers of VPCs
+            vpcs = []
+            paginator = self.ec2_client.get_paginator('describe_vpcs')
+            for page in paginator.paginate():
+                vpcs.extend(page['Vpcs'])
 
             for vpc in vpcs:
                 vpc_id = vpc['VpcId']
@@ -648,12 +692,12 @@ class AWSSecurityScanner:
 
         return findings
 
-    def run_full_scan(self):
+    def run_full_scan(self) -> List[Dict[str, Any]]:
         """
         Execute all security checks
 
         Returns:
-            list: All findings from all checks
+            List[Dict[str, Any]]: All findings from all checks
         """
         print("[*] Starting AWS security scan...")
         print(f"[*] Account: {self.account_id}")

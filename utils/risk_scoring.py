@@ -2,6 +2,7 @@
 Risk Scoring Module
 Calculates risk scores and prioritizes security findings
 """
+from typing import Dict, List, Any, Tuple
 
 
 class RiskScorer:
@@ -37,12 +38,12 @@ class RiskScorer:
         'VPC': 1.0
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize risk scorer"""
-        self.total_risk_score = 0
-        self.finding_count = 0
+        self.total_risk_score: float = 0.0
+        self.finding_count: int = 0
 
-    def calculate_finding_score(self, finding):
+    def calculate_finding_score(self, finding: Dict[str, Any]) -> float:
         """
         Calculate risk score for individual finding
 
@@ -85,7 +86,7 @@ class RiskScorer:
         # Cap at 100
         return min(round(final_score, 2), 100.0)
 
-    def calculate_account_score(self, findings):
+    def calculate_account_score(self, findings: List[Dict[str, Any]]) -> float:
         """
         Calculate overall account security score (0-100)
         Higher score = better security
@@ -111,7 +112,7 @@ class RiskScorer:
 
         return round(security_score, 2)
 
-    def get_security_grade(self, score):
+    def get_security_grade(self, score: float) -> str:
         """
         Convert security score to letter grade
 
@@ -148,7 +149,7 @@ class RiskScorer:
         else:
             return 'F'
 
-    def prioritize_findings(self, findings):
+    def prioritize_findings(self, findings: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
         Sort findings by risk score (highest first)
 
@@ -168,7 +169,7 @@ class RiskScorer:
         # Sort by risk score (descending)
         return sorted(scored_findings, key=lambda x: x['risk_score'], reverse=True)
 
-    def generate_summary_stats(self, findings):
+    def generate_summary_stats(self, findings: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Generate executive summary statistics
 
@@ -235,7 +236,8 @@ class RiskScorer:
 
         return stats
 
-    def get_risk_trend(self, current_findings, previous_findings):
+    def get_risk_trend(self, current_findings: List[Dict[str, Any]],
+                       previous_findings: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Calculate risk trend between two scans
 
@@ -265,7 +267,7 @@ class RiskScorer:
 
         return trend
 
-    def export_metrics(self, findings):
+    def export_metrics(self, findings: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Export key metrics for dashboards/monitoring
 
@@ -296,7 +298,8 @@ class RiskScorer:
         return metrics
 
 
-def calculate_compliance_score(findings, framework='CIS'):
+def calculate_compliance_score(findings: List[Dict[str, Any]],
+                              framework: str = 'CIS') -> Dict[str, Any]:
     """
     Calculate compliance score for specific framework
 
