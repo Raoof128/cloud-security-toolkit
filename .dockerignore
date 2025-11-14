@@ -1,0 +1,100 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Documentation build
+docs/_build/
+
+# Reports and outputs (will be generated at runtime)
+reports/
+*.html
+*.json
+*.csv
+*.log
+
+# Credentials
+.env
+*.pem
+*.key
+credentials.json
+.aws/
+config/credentials*
+
+# CI/CD
+.github/
+.circleci/
+.travis.yml
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.swp
+
+# OS files
+Thumbs.db
+.directory
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# README images (if any)
+*.png
+*.jpg
+*.gif
+
+# Development files
+Makefile
+.editorconfig
+
+# Examples (optional - remove if you want examples in container)
+# examples/
+
+# Documentation (optional - remove if you want docs in container)
+# docs/
+
+# Test files
+tests/
+pytest.ini
+
+# Debug files
+DEBUG_*
+INSTALLATION_MONITORING_REPORT.md

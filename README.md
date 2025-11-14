@@ -1,8 +1,21 @@
 # Cloud Security Audit & Hardening Toolkit
 
-[![Production Ready](https://img.shields.io/badge/status-production%20ready-brightgreen)]()
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)]()
+<div align="center">
+
+[![Production Ready](https://img.shields.io/badge/status-production%20ready-brightgreen)](https://github.com/Raoof128/cloud-security-toolkit)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![GitHub issues](https://img.shields.io/github/issues/Raoof128/cloud-security-toolkit)](https://github.com/Raoof128/cloud-security-toolkit/issues)
+[![GitHub stars](https://img.shields.io/github/stars/Raoof128/cloud-security-toolkit)](https://github.com/Raoof128/cloud-security-toolkit/stargazers)
+
+[![Tests](https://github.com/Raoof128/cloud-security-toolkit/workflows/Tests/badge.svg)](https://github.com/Raoof128/cloud-security-toolkit/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/Raoof128/cloud-security-toolkit/branch/main/graph/badge.svg)](https://codecov.io/gh/Raoof128/cloud-security-toolkit)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://github.com/Raoof128/cloud-security-toolkit/tree/main/docs)
+[![Docker](https://img.shields.io/badge/docker-ready-blue)](https://github.com/Raoof128/cloud-security-toolkit/blob/main/Dockerfile)
+
+</div>
 
 A comprehensive automated cloud security auditing and hardening toolkit that scans AWS, Azure, and GCP environments for misconfigurations, security vulnerabilities, and compliance violations.
 

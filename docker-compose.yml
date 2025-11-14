@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  scanner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cloud-security-toolkit:latest
+    container_name: cloud-security-scanner
+
+    # AWS credentials - choose one method:
+
+    # Method 1: Use host AWS credentials (recommended)
+    volumes:
+      - ~/.aws:/home/scanner/.aws:ro
+      - ./reports:/app/reports
+      - ./config:/app/config:ro
+
+    # Method 2: Use environment variables
+    # environment:
+    #   - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+    #   - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    #   - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-east-1}
+
+    # Override default command
+    command: ["--demo", "--output", "/app/reports/demo_report.html"]
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 512M
+
+    # Network mode
+    network_mode: bridge
+
+    # Restart policy
+    restart: "no"
+
+  # Example: Scheduled scanning with cron
+  scanner-scheduled:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cloud-security-toolkit:latest
+    container_name: cloud-security-scanner-cron
+
+    volumes:
+      - ~/.aws:/home/scanner/.aws:ro
+      - ./reports:/app/reports
+
+    # Run scan daily at 2 AM
+    # command: >
+    #   sh -c "echo '0 2 * * * python /app/cloud_security_audit.py --provider aws --output /app/reports/daily_scan.html' | crontab - && crond -f"
+
+    # For now, keep container stopped
+    profiles: ["scheduled"]
+
+    restart: unless-stopped
+
+# Named volumes for persistent data (optional)
+volumes:
+  reports:
+    driver: local
+  config:
+    driver: local
+
+# Networks (optional)
+networks:
+  default:
+    name: cloud-security-network

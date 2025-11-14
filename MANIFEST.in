@@ -1,0 +1,68 @@
+# MANIFEST.in - Specify additional files to include in distribution
+
+# Documentation
+include README.md
+include LICENSE
+include CHANGELOG.md
+include CONTRIBUTING.md
+include CODE_OF_CONDUCT.md
+include SECURITY.md
+
+# Configuration files
+include requirements.txt
+include pyproject.toml
+include setup.py
+include pytest.ini
+include Makefile
+
+# Configuration templates
+include config/*.yaml
+include config/.env.template
+recursive-include config *.yaml
+
+# Report templates
+recursive-include reporting/templates *.html
+recursive-include reporting/templates *.css
+recursive-include reporting/templates *.js
+
+# Documentation
+recursive-include docs *.md
+recursive-include docs *.rst
+
+# Examples
+recursive-include examples *.py
+recursive-include examples *.md
+
+# Tests (optional - include for development installs)
+recursive-include tests *.py
+
+# Exclude compiled files and caches
+global-exclude __pycache__
+global-exclude *.py[cod]
+global-exclude *.so
+global-exclude .DS_Store
+
+# Exclude development files
+exclude .gitignore
+exclude .gitattributes
+exclude .editorconfig
+exclude .pre-commit-config.yaml
+exclude .yamllint.yml
+exclude Dockerfile
+exclude docker-compose.yml
+exclude .dockerignore
+
+# Exclude CI/CD
+recursive-exclude .github *
+
+# Exclude reports and outputs
+recursive-exclude reports *
+global-exclude *.html
+global-exclude *.json
+global-exclude *.csv
+global-exclude *.log
+
+# Exclude credentials
+global-exclude *.pem
+global-exclude *.key
+global-exclude credentials.*
