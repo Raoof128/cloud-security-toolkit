@@ -2,10 +2,20 @@
 AWS Remediation Module
 Automated remediation scripts for common AWS security issues
 """
+from typing import Optional
 import boto3
 from botocore.exceptions import ClientError
 from datetime import datetime
 import json
+import sys
+import os
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.validators import (
+    validate_s3_bucket_name, validate_cidr_block, validate_port_number,
+    validate_security_group_id, validate_vpc_id, validate_cloudtrail_name
+)
 
 
 class AWSRemediation:
@@ -46,13 +56,22 @@ class AWSRemediation:
 
     # ========== S3 Remediations ==========
 
-    def enable_s3_encryption(self, bucket_name):
+    def enable_s3_encryption(self, bucket_name: str) -> bool:
         """
         Enable server-side encryption on S3 bucket
 
         Args:
             bucket_name (str): Name of the S3 bucket
+
+        Returns:
+            bool: True if successful, False otherwise
         """
+        # Validate bucket name
+        if not validate_s3_bucket_name(bucket_name):
+            print(f"[-] Invalid S3 bucket name: {bucket_name}")
+            self.log_action('enable_s3_encryption', bucket_name, 'failed', 'Invalid bucket name')
+            return False
+
         if self.dry_run:
             print(f"[DRY RUN] Would enable AES256 encryption on bucket: {bucket_name}")
             self.log_action('enable_s3_encryption', bucket_name, 'simulated')
@@ -78,13 +97,22 @@ class AWSRemediation:
             self.log_action('enable_s3_encryption', bucket_name, 'failed', str(e))
             return False
 
-    def enable_s3_versioning(self, bucket_name):
+    def enable_s3_versioning(self, bucket_name: str) -> bool:
         """
         Enable versioning on S3 bucket
 
         Args:
             bucket_name (str): Name of the S3 bucket
+
+        Returns:
+            bool: True if successful, False otherwise
         """
+        # Validate bucket name
+        if not validate_s3_bucket_name(bucket_name):
+            print(f"[-] Invalid S3 bucket name: {bucket_name}")
+            self.log_action('enable_s3_versioning', bucket_name, 'failed', 'Invalid bucket name')
+            return False
+
         if self.dry_run:
             print(f"[DRY RUN] Would enable versioning on bucket: {bucket_name}")
             self.log_action('enable_s3_versioning', bucket_name, 'simulated')
@@ -183,7 +211,8 @@ class AWSRemediation:
 
     # ========== Security Group Remediations ==========
 
-    def restrict_security_group_rule(self, sg_id, port, protocol='tcp', new_cidr='10.0.0.0/8'):
+    def restrict_security_group_rule(self, sg_id: str, port: int,
+                                     protocol: str = 'tcp', new_cidr: str = '10.0.0.0/8') -> bool:
         """
         Restrict security group rule from 0.0.0.0/0 to specific CIDR
 
@@ -192,7 +221,31 @@ class AWSRemediation:
             port (int): Port number
             protocol (str): Protocol (tcp/udp/icmp)
             new_cidr (str): New CIDR range to allow
+
+        Returns:
+            bool: True if successful, False otherwise
         """
+        # Validate inputs
+        if not validate_security_group_id(sg_id):
+            print(f"[-] Invalid security group ID: {sg_id}")
+            self.log_action('restrict_security_group', sg_id, 'failed', 'Invalid SG ID')
+            return False
+
+        if not validate_port_number(port):
+            print(f"[-] Invalid port number: {port}")
+            self.log_action('restrict_security_group', sg_id, 'failed', f'Invalid port: {port}')
+            return False
+
+        if not validate_cidr_block(new_cidr):
+            print(f"[-] Invalid CIDR block: {new_cidr}")
+            self.log_action('restrict_security_group', sg_id, 'failed', f'Invalid CIDR: {new_cidr}')
+            return False
+
+        if protocol not in ['tcp', 'udp', 'icmp', 'all', '-1']:
+            print(f"[-] Invalid protocol: {protocol}")
+            self.log_action('restrict_security_group', sg_id, 'failed', f'Invalid protocol: {protocol}')
+            return False
+
         if self.dry_run:
             print(f"[DRY RUN] Would restrict SG {sg_id} port {port} from 0.0.0.0/0 to {new_cidr}")
             self.log_action('restrict_security_group', sg_id, 'simulated')

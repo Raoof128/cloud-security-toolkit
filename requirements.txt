@@ -1,39 +1,33 @@
-# AWS SDK
+# AWS SDK - Core dependencies
 boto3>=1.34.0
 botocore>=1.34.0
 
-# Azure SDK
-azure-identity>=1.15.0
-azure-mgmt-resource>=23.0.0
-azure-mgmt-compute>=30.0.0
-azure-mgmt-storage>=21.0.0
-azure-mgmt-network>=25.0.0
-azure-mgmt-security>=6.0.0
-
-# GCP SDK
-google-cloud-storage>=2.14.0
-google-cloud-compute>=1.16.0
-google-cloud-iam>=2.14.0
-google-cloud-logging>=3.9.0
-
 # Reporting and Data Processing
-jinja2>=3.1.3
-pandas>=2.2.0
-reportlab>=4.0.0
+jinja2>=3.1.3          # HTML report templating
+pandas>=2.2.0          # CSV export support
 
-# Configuration and Utilities
-pyyaml>=6.0.1
-python-dotenv>=1.0.0
-cryptography>=42.0.0
+# Configuration
+pyyaml>=6.0.1          # Configuration file parsing
 
 # CLI and Progress
-colorama>=0.4.6
-tqdm>=4.66.0
+colorama>=0.4.6        # Colored terminal output
 
 # Date/Time
-python-dateutil>=2.8.2
+python-dateutil>=2.8.2 # Date parsing utilities
 
-# Testing (optional)
-pytest>=8.0.0
-pytest-cov>=4.1.0
-moto>=5.0.0
+# Testing
+pytest>=8.0.0          # Unit testing framework
+pytest-cov>=4.1.0      # Code coverage reporting
+moto>=5.0.0            # AWS mocking for tests
+
+# Future cloud provider support (commented out until implemented)
+# azure-identity>=1.15.0
+# azure-mgmt-resource>=23.0.0
+# azure-mgmt-compute>=30.0.0
+# azure-mgmt-storage>=21.0.0
+# azure-mgmt-network>=25.0.0
+# azure-mgmt-security>=6.0.0
+# google-cloud-storage>=2.14.0
+# google-cloud-compute>=1.16.0
+# google-cloud-iam>=2.14.0
+# google-cloud-logging>=3.9.0
