@@ -332,18 +332,69 @@ pip install -r requirements.txt
 python -c "import boto3; print(boto3.__version__)"
 ```
 
+## Recent Improvements
+
+### Version 2.0 - Major Quality & Security Update
+
+**Code Quality:**
+- ✅ Added type hints throughout codebase (PEP 484)
+- ✅ Comprehensive input validation for all remediation functions
+- ✅ Professional HTML report template with responsive design
+- ✅ Module docstrings and improved documentation
+
+**Security Enhancements:**
+- ✅ Input validation prevents injection attacks
+- ✅ Secure validators for S3 buckets, CIDR blocks, ports, AWS resource IDs
+- ✅ Sanitization of resource names
+- ✅ Type safety reduces runtime errors
+
+**Bug Fixes:**
+- ✅ Fixed API pagination (prevents missing resources in large AWS accounts)
+- ✅ Fixed missing HTML template issue
+- ✅ Improved error handling
+
+**Testing:**
+- ✅ Comprehensive test suite with pytest
+- ✅ Unit tests for validators and risk scoring
+- ✅ Test coverage reporting configured
+
+**Dependencies:**
+- ✅ Removed unused Azure/GCP SDKs (commented for future use)
+- ✅ Cleaner dependency tree
+- ✅ Faster installation
+
 ## Roadmap
 
 - [x] AWS scanning (IAM, S3, EC2, CloudTrail)
 - [x] Risk scoring and prioritization
 - [x] Automated remediation
 - [x] Multiple report formats
-- [ ] Azure scanning (in progress)
+- [x] Type hints and input validation
+- [x] Comprehensive test suite
+- [ ] Azure scanning (planned)
 - [ ] GCP scanning (planned)
 - [ ] CI/CD integration
 - [ ] Scheduled scanning
 - [ ] Dashboard UI
 - [ ] Email notifications
+
+## Testing
+
+Run the test suite:
+
+```bash
+# Install test dependencies
+pip install -r requirements.txt
+
+# Run all tests
+pytest
+
+# Run with coverage report
+pytest --cov=. --cov-report=html
+
+# Run specific test file
+pytest tests/test_validators.py -v
+```
 
 ## Contributing
 
